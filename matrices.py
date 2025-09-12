@@ -1,5 +1,9 @@
 import numpy as np
+import sympy as sp
+import secrets
 
+seed = secrets.randbits(128)
+rand_generator = np.random.default_rng(seed)
 
 def get_matrix(n: int, m: int) -> np.ndarray:
     """Create random matrix n * m.
@@ -11,8 +15,12 @@ def get_matrix(n: int, m: int) -> np.ndarray:
     Returns:
         np.ndarray: matrix n*m.
     """
-    raise NotImplementedError
+    return rand_generator.random((n, m))
 
+def test_get_matrix():
+    print('test_get_matrix')
+    print(get_matrix(3, 3))
+test_get_matrix()
 
 def add(x: np.ndarray, y: np.ndarray) -> np.ndarray:
     """Matrix addition.
@@ -24,7 +32,12 @@ def add(x: np.ndarray, y: np.ndarray) -> np.ndarray:
     Returns:
         np.ndarray: matrix sum.
     """
-    raise NotImplementedError
+    return x + y
+
+def test_add():
+    print('test_add')
+    print(add(get_matrix(3, 3), get_matrix(3, 3)))
+test_add()
 
 
 def scalar_multiplication(x: np.ndarray, a: float) -> np.ndarray:
@@ -37,7 +50,13 @@ def scalar_multiplication(x: np.ndarray, a: float) -> np.ndarray:
     Returns:
         np.ndarray: multiplied matrix.
     """
-    raise NotImplementedError
+    return a * x
+
+def test_scalar_multiplication():
+    x = np.array([[1, 2], [3, 4]])
+    print('test_scalar_multiplication')
+    print(scalar_multiplication(x, 10))
+test_scalar_multiplication()
 
 
 def dot_product(x: np.ndarray, y: np.ndarray) -> np.ndarray:
@@ -50,7 +69,15 @@ def dot_product(x: np.ndarray, y: np.ndarray) -> np.ndarray:
     Returns:
         np.ndarray: dot product.
     """
-    raise NotImplementedError
+    return np.dot(x, y)
+
+
+def test_dot_product():
+    x = [[1, 2], [3, 4]]
+    y = [[5, 6], [7, 8]]
+    print('test_dot_product')
+    print(dot_product(x, y))
+test_dot_product()
 
 
 def identity_matrix(dim: int) -> np.ndarray:
@@ -62,8 +89,12 @@ def identity_matrix(dim: int) -> np.ndarray:
     Returns:
         np.ndarray: identity matrix.
     """
-    raise NotImplementedError
+    return np.eye(dim)
 
+def test_identity_matrix():
+    print('test_identity_matrix')
+    print(identity_matrix(3))
+test_identity_matrix()
 
 def matrix_inverse(x: np.ndarray) -> np.ndarray:
     """Compute inverse matrix.
@@ -74,7 +105,17 @@ def matrix_inverse(x: np.ndarray) -> np.ndarray:
     Returns:
         np.ndarray: inverse matrix.
     """
-    raise NotImplementedError
+    if np.linalg.det(x) == 0:
+        raise ValueError("Matrix is not invertible - determinant is 0")
+    return np.linalg.inv(x)
+
+def test_matrix_inverse():
+    x = [[1, 2], [3, 4]]
+    x_inv = matrix_inverse(x)
+    print('test_matrix_inverse')
+    print(x_inv)
+    print(x  @ x_inv)
+test_matrix_inverse()
 
 
 def matrix_transpose(x: np.ndarray) -> np.ndarray:
@@ -86,7 +127,13 @@ def matrix_transpose(x: np.ndarray) -> np.ndarray:
     Returns:
         np.ndarray: transosed matrix.
     """
-    raise NotImplementedError
+    return x.T
+
+def test_matrix_transpose():
+    x = np.array([[1, 2], [3, 4]])
+    print('test_matrix_transpose')
+    print(matrix_transpose(x))
+test_matrix_transpose()
 
 
 def hadamard_product(x: np.ndarray, y: np.ndarray) -> np.ndarray:
@@ -99,8 +146,7 @@ def hadamard_product(x: np.ndarray, y: np.ndarray) -> np.ndarray:
     Returns:
         np.ndarray: hadamard produc
     """
-    raise NotImplementedError
-
+    return x * y
 
 def basis(x: np.ndarray) -> tuple[int]:
     """Compute matrix basis.
@@ -111,7 +157,15 @@ def basis(x: np.ndarray) -> tuple[int]:
     Returns:
         tuple[int]: indexes of basis columns.
     """
-    raise NotImplementedError
+    m = sp.Matrix(x)
+    _, pivot_columns = m.rref()
+    return tuple(pivot_columns)
+
+def test_basis():
+    x = np.array([[1, 2], [3, 4]])
+    print('test_basis')
+    print(basis(x))
+test_basis()
 
 
 def norm(x: np.ndarray, order: int | float | str) -> float:
@@ -124,4 +178,10 @@ def norm(x: np.ndarray, order: int | float | str) -> float:
     Returns:
         float: vector norm
     """
-    raise NotImplementedError
+    return np.linalg.norm(x, order)
+
+def test_norm():
+    x = np.array([[1, 2], [3, 4]])
+    print('test_norm')
+    print(norm(x, 2))
+test_norm()
