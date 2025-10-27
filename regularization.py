@@ -62,7 +62,9 @@ def linear_regression(X: np.ndarray, y: np.ndarray) -> BaseEstimator:
     Returns:
         BaseEstimator: Trained linear regression model.
     """
-    raise NotImplementedError
+    model = LinearRegression()
+    model.fit(X, y)
+    return model
 
 
 def ridge_regression(X: np.ndarray, y: np.ndarray) -> BaseEstimator:
@@ -76,7 +78,11 @@ def ridge_regression(X: np.ndarray, y: np.ndarray) -> BaseEstimator:
     Returns:
         BaseEstimator: Best ridge regression model found by GridSearchCV.
     """
-    raise NotImplementedError
+    model = Ridge()
+    param_grid = {'alpha': [0.001, 0.01, 0.1, 1, 10, 100]}
+    search=GridSearchCV(model, param_grid,cv=5)
+    search.fit(X, y)
+    return search.best_estimator_
 
 
 def lasso_regression(X: np.ndarray, y: np.ndarray) -> BaseEstimator:
@@ -90,7 +96,11 @@ def lasso_regression(X: np.ndarray, y: np.ndarray) -> BaseEstimator:
     Returns:
         BaseEstimator: Best lasso regression model found by GridSearchCV.
     """
-    raise NotImplementedError
+    model = Lasso(random_state=0, max_iter=10000)   
+    param_grid = {'alpha': [0.001, 0.01, 0.1, 1, 10, 100]}
+    search = GridSearchCV(model, param_grid, cv=5)
+    search.fit(X, y)
+    return search.best_estimator_
 
 
 def logistic_regression(X: np.ndarray, y: np.ndarray) -> BaseEstimator:
@@ -104,7 +114,9 @@ def logistic_regression(X: np.ndarray, y: np.ndarray) -> BaseEstimator:
     Returns:
         BaseEstimator: Trained logistic regression model.
     """
-    raise NotImplementedError
+    model = LogisticRegression(penalty=None, solver="lbfgs", max_iter=10000)
+    model.fit(X, y)
+    return model
 
 
 def logistic_l2_regression(X: np.ndarray, y: np.ndarray) -> BaseEstimator:
@@ -118,7 +130,11 @@ def logistic_l2_regression(X: np.ndarray, y: np.ndarray) -> BaseEstimator:
     Returns:
         BaseEstimator: Best logistic regression model with L2 regularization found by GridSearchCV.
     """
-    raise NotImplementedError
+    param_grid = {"C": [0.01, 0.1, 1, 10, 100]}
+    model = LogisticRegression(penalty="l2", solver="liblinear", max_iter=10000)
+    search = GridSearchCV(model, param_grid, scoring='accuracy',cv=5)
+    search.fit(X, y)
+    return search.best_estimator_
 
 
 def logistic_l1_regression(X: np.ndarray, y: np.ndarray) -> BaseEstimator:
@@ -132,4 +148,16 @@ def logistic_l1_regression(X: np.ndarray, y: np.ndarray) -> BaseEstimator:
     Returns:
         BaseEstimator: Best logistic regression model with L1 regularization found by GridSearchCV.
     """
-    raise NotImplementedError
+    param_grid = {"C": [0.01, 0.1, 1, 10, 100]}
+    model = LogisticRegression(penalty="l1", solver="liblinear", max_iter=10000)
+    search = GridSearchCV(model, param_grid,scoring='accuracy',cv=5)
+    search.fit(X, y)
+    return search.best_estimator_
+
+
+""" 
+Linear Regression models showed very close result, with Linear being slightly better, regularization didn't improve the performance.
+Logistic Regression models showed very close result, with Logistic L2 being slightly better, regularization improves the performance but not significantly.
+ """
+
+    
